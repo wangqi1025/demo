@@ -1,0 +1,109 @@
+{layout name='out'}
+<style type="text/css">
+    table input[type=text] {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        text-indent: 4px;
+        outline: none;
+        color: #666;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="alert">
+                菜单管理
+                <a style="float: right;" href="{:url('add')}" class="btn btn-info btn-sm">添加</a>
+            </div>
+            <!-- 表格 -->
+            <table class="table table-bordered table-hover">
+                <tr class="text-info">
+                    <th><input type="checkbox" name=""></th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">菜单样式</th>
+                    <th class="text-center"></th>
+                    <th class="text-center">菜单名称</th>
+                    <th class="text-center">控制器</th>
+                    <th class="text-center">方法</th>
+                    <th class="text-center">是否显示</th>
+                    <th class="text-center">排序</th>
+                    <th class="text-center">操作</th>
+                </tr>
+
+                {volist name='list' id='v'}
+                <tr class="tr-{$v.id}">
+                    <td><input type="checkbox" name=""></td>
+                    <td>{$v.id}</td>
+                    <td><input type="text" class="eidt-css" data-id="{$v.id}" value="{$v.css}"></td>
+                    <td><i class="{$v.css}"></i></td>
+                    <td style="text-align: left;">
+                        {eq name='$v.pid' value='0'}
+                        <span class="folder-open"></span> <b>{$v.name}</b>
+                        {else /}
+                        <span style="display:inline-block;width:{$v.leftpin}px;"></span>├ {$v.name}
+                        {/eq}   
+                    </td>
+                    <td>{$v.c}</td>
+                    <td>{$v.a}</td>
+                    <td>
+                        {eq name='$v.is_show' value='1'}
+                        <span style="cursor: pointer;" class="text-primary" onclick="chg('{$v.id}', 0);">显示</span>
+                        {else /}
+                        <span style="cursor: pointer;" class="text-danger" onclick="chg('{$v.id}', 1);">不显示</span>
+                        {/eq}   
+                    </td>
+                    <td>{$v.rank}</td>
+                    <td>
+                        <a href="{:url('edit', ['id'=>$v['id']])}" title="编辑"><i class="fa fa-edit fa-fw"></i></a> 
+                        |
+                        <a style="cursor: pointer;" onclick="del('{$v.id}')" title="删除"><i class="fa fa-trash-o fa-lg"></i></a>
+                    </td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(".eidt-css").on("change", function () {
+        var id = $(this).attr("data-id");
+        var value = $(this).val();
+        $.post("{:url('admin/Menu/edit')}", {sub:1, id: id, type: 'css', value: value}, function (res) {
+            if (res.status == 1) {
+                layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                    history.go(0);
+                })
+            } else {
+                layer.msg(res.msg, {icon:2,time:1000});
+            }
+        })
+    })
+
+    function chg(id, value)
+    {
+        $.post("{:url('admin/Menu/edit')}", {sub:1, id: id, type: 'is_show', value: value}, function (res) {
+            if (res.status == 1) {
+                layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                    history.go(0);
+                })
+            } else {
+                layer.msg(res.msg, {icon:2,time:1000});
+            }
+        })
+    }
+
+    function del(id) 
+    {
+        layer.confirm('确认要删除吗？',function(index){
+            $.post("{:url('admin/Menu/del')}", {id: id}, function(res){
+                if (res.status == 1) {
+                    layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                        history.go(0);
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:2,time:1000});
+                }
+            })
+        })
+    }    
+</script>

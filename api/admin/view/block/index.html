@@ -1,0 +1,61 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="alert">
+                自定义块管理
+                <a style="float: right;" href="{:url('add', ['cat'=>$Request.param.cat])}" class="btn btn-info btn-sm">添加自定义块</a>
+            </div>
+            <!-- 表格 -->
+            <table class="table table-bordered table-hover">
+                <tr class="text-info">
+                    <th class="text-center">ID</th>
+                    <th class="text-center">名称【英文名称】</th>
+                    <th class="text-center">说明</th>
+                    <th class="text-center">分类</th>
+                    <th class="text-center">类型</th>
+                    <th class="text-center">模板调用代码</th>
+                    <th class="text-center">操作</th>
+                </tr>
+
+                {volist name='list' id='v'}
+                <tr class="tr-{$v.id}">
+                    <td>{$v.id}</td>
+                    <td>{$v.name} 【{$v.tag}】</td>
+                    <td>{$v.remark}</td>
+                    <td>{$v.cid}</td>
+                    <td>
+                        {switch name='$v.type'}
+                        {case 1}文字{/case}
+                        {case 2}图片{/case}
+                        {case 3}富文本{/case}
+                        {/switch}
+                    </td>
+                    <td> &lt;jidu:block name='{$v.tag}' /&gt; </td>
+                    <td>
+                        <a href="{:url('edit', ['id'=>$v['id']])}" title="编辑"><i class="fa fa-edit fa-fw"></i></a> 
+                        |
+                        <a style="cursor: pointer;" onclick="del('{$v.id}')" title="删除"><i class="fa fa-trash-o fa-lg"></i></a>
+                    </td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function del(id) 
+    {
+        layer.confirm('确认要删除吗？',function(index){
+            $.post("{:url('del')}", {id: id}, function(res){
+                if (res.status == 1) {
+                    layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                        history.go(0);
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:2,time:1000});
+                }
+            })
+        })
+    }    
+</script>

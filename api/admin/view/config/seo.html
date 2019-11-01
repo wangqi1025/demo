@@ -1,0 +1,22 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                SEO设置
+            </div>
+            <div class="panel-body">
+                <form role="form" method='post' action="{:url('seo')}" enctype="multipart/form-data">
+                    {volist name='list' id='v'}
+                        <div class="form-group">
+                            <label>{$v.name}</label>
+                            <input name="{$v.tag}" class="form-control" type="text" value="{$v.val}" required>
+                            <p class="help-block">{$v.exp}</p>
+                        </div>
+                    {/volist}
+                    <button name="sub" value="1" class="btn btn-info f_r"> 修 改 信 息 </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

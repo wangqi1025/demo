@@ -1,0 +1,168 @@
+{layout name='out'}
+<?php error_reporting(0);?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                添加菜单
+            </div>
+            <div class="panel-body">
+                <form <?php if($res){ ?> action="{:url('edit_field')}"<?php }else{ ?>action="{:url('add_field')}"<?php }?> method='post' enctype="multipart/form-data">
+                    <input type="hidden" name="mid" value="{$id}">
+                    <input type="hidden" name="id" value="{$res.id}">
+                    <div class="form-group">
+                        <label>字段类型</label>
+                        <select name="field_type" class="form-control" id="checkbox" onchange="btn_change(this)"  required>
+                            <option value="0">选择列表</option>
+                            {volist name='checkbox' id='v'}
+                            <option value="{$v}" <?php if($res['field_type'] == $v){ ?>selected="selected" <?php }?> > {$v}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>是否显示</label>
+                        <div class="radio">
+                            <label><input type="radio" name="is_not_null" value="1" {empty  name="$res.is_not_null"}{if condition="$res.is_not_null == 1"}checked{/if}{/empty}  required> 是</label>
+                            <label><input type="radio" name="is_not_null" value="0" {empty  name="$res.is_not_null"}{if condition="$res.is_not_null == 0"}checked{/if}{/empty}  required> 否</label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>字段英文名称</label>
+                        <input name="field" value="{$res.field}" onkeyup="this.value=this.value.replace(/[^a-zA-Z]/g,'')" maxlength="20" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>字段中文名称</label>
+                        <input name="name" value="{$res.name}" type="text" class="form-control"  required>
+                    </div>
+                    <div class="form-group">
+                        <label>字段备注</label>
+                        <input name="remark" value="{$res.remark}" type="text" class="form-control"  required>
+
+                    </div>
+                    <div class="form-group">
+                        <label>字段长度</label>
+                        <input name="length" value="{$res.length}" type="number" min="0" step="1" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>字段排序</label>
+                        <input name="rank" value="{$res.rank}" type="number" min="0" step="1" class="form-control" required>
+                    </div>
+
+                    <div class="form-group" id="oss" style="display: none;">
+                        <label id="value">默认值</label>
+                        <textarea name="default_value" id="textarea"  min="0" step="1" class="form-control" required>{$res.default_value}</textarea>
+                    </div>
+
+                    <button  name="sub" value='1' type="submit" class="btn btn-info" style="margin-right: 40px;"> 保 存 </button>
+                    <a href="{:url('index')}" class="btn btn-warning"> 返 回 </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var field =  "{$str}";
+            switch (field){
+                case '单行文本':
+                    change(2,1);//2为textarea属性，1为不显示
+                    break;
+                case "多行文本":
+                    change(2,2);///2是textarea属性,2为显示
+                    break;
+                case "简约编辑器":
+                    change(3,1);///3是input为hidden属性,1为不显示
+                    break;
+                case "富文本编辑器":
+                    change(2,2);///2是input为textarea属性
+                    break;
+                case "附件":
+                    change(3,1);
+                    break;
+                case "单图上传":
+                    change(3,1);
+                    break;
+                case "多图上传":
+                    change(3,1);
+                    break;
+                case "日期和时间":
+                    change(3,1);
+                    break;
+                case "数字":
+                    change(2,1);///4是input为number属性
+                    break;
+                case "单选按钮":
+                    change(2,2);
+                    break;
+                case "复选框":
+                    change(2,2);
+                    break;
+                case "下拉框":
+                    change(2,2);
+                    break;
+
+            }
+        })
+        function btn_change(e) {
+            var checkbox = $(e).find('option:selected').val();
+            //change(x,y);x为第一个参数textarea的属性，y为文字的说明，
+            switch (checkbox){
+                case '单行文本':
+                    change(2,1);//2为textarea属性，1为不显示
+                break;
+                case "多行文本":
+                    change(2,2);///2是textarea属性,2为显示
+                break;
+                case "简约编辑器":
+                    change(3,1);///3是input为hidden属性,1为不显示
+                break;
+                case "富文本编辑器":
+                    change(2,2);///2是input为textarea属性
+                break;
+                case "附件":
+                    change(3,1);
+                break;
+                case "单图上传":
+                    change(3,1);
+                break;
+                case "多图上传":
+                    change(3,1);
+                break;
+                case "日期和时间":
+                    change(3,1);
+                break;
+                case "数字":
+                    change(2,1);///4是input为number属性
+                 break;
+                case "单选按钮":
+                    change(2,2);
+                break;
+                case "复选框":
+                    change(2,2);
+                break;
+                case "下拉框":
+                    change(2,2);
+                break;
+
+            }
+        }
+
+        function change(type,status) {
+            if (type == 2){
+                $('#oss').show();
+                $('#textarea').show();
+                if (status == 2){
+                    $('#value').text("默认值（多个选项需用英文符号\"/\"分开）");
+                } else if(status == 1){
+                    $('#value').text("默认值");
+                }
+            }else if(type == 3){
+                $('#oss').hide();
+                $('#default').val('');
+                $('#textarea').val('');
+            }
+        }
+    </script>
+</div>

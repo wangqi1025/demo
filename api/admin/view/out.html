@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>几度CMS管理后台</title>
+    <link href="__STATIC__/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="__STATIC__/assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="__STATIC__/assets/css/basic.css" rel="stylesheet" />
+    <link href="__STATIC__/assets/css/custom.css" rel="stylesheet" />
+    <link href="__STATIC__/assets/css/bootstrap-fileupload.min.css" rel="stylesheet"/>
+    <script src="__STATIC__/assets/js/jquery-1.10.2.js"></script>
+    <script src="__STATIC__/assets/js/bootstrap.js"></script>
+    <script src="__STATIC__/assets/js/jquery.metisMenu.js"></script>
+    <script src="__STATIC__/assets/js/custom.js"></script>
+    <script src="__STATIC__/assets/js/bootstrap-fileupload.js"></script>
+    <script src="__STATIC__/assets/js/jquery.metisMenu.js"></script>
+    <script src="__STATIC__/plug/layer/layer.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar navbar-default navbar-cls-top " role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <!-- 手机端样式 -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!-- 手机端样式 end-->
+            <a class="navbar-brand" href="{:url('admin/Index/index')}">管理员后台</a>
+        </div>
+
+        <div class="header-right">
+            <a href="{:url('Admin/info')}" class="btn btn-primary">管理员：{$admin.name}</a>
+            |
+            <a class="btn btn-danger" Onclick="out();" title="Logout">退出登录</a>
+        </div>
+    </nav>
+
+    <!-- 左侧导航 start -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+                {volist name='nav' id='v'}
+                {empty name='v.child'}
+                <li>
+                    <a class="a-menu" data-id="{$v.id}" href="{:url('admin/'.$v['c'].'/'.$v['a'])}"><i class="{$v.css}"></i>{$v.name}</a>
+                </li>
+                {else /}
+                <li class="a-parent">
+                    <a href="#"><i class="fa fa-book "></i>{$v.name}<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        {volist name='v.child' id='vv'}
+                        <li>
+                            <a class="a-menu" data-id="{$v.id}" href="{:url($vv['c'].'/'.$vv['a'])}"><i class="{$vv.css}"></i>{$vv.name}</a>
+                        </li>
+                        {/volist}
+                    </ul>
+                </li>
+                {/empty}
+                {/volist}
+            </ul>
+        </div>
+    </nav>
+    <!-- 左侧导航 end -->
+
+    <!-- 内容 -->
+    <div id="page-wrapper">
+        <div id="page-inner">{__CONTENT__}</div>
+    </div>
+    <!-- 内容 end -->
+</div>
+
+<!-- 底部版权 -->
+<div id="footer-sec">
+    版权所有：几度CMS
+</div>
+<!-- 底部版权 end -->
+
+
+<script>
+    //菜单选中JS
+    var nowUrl = location.href;
+    $(".a-menu").each(function () {
+        var that = $(this);
+        var theUrl = "http://"+"{$_SERVER.HTTP_HOST}"+that.attr('href');
+        if(nowUrl.indexOf(that.attr('href')) >= 0 ) { 
+            that.addClass('active-menu');
+            that.parents('.a-parent').addClass('active');
+        }
+    })
+
+    //退出系统
+    function out() {
+        layer.confirm('确认退出吗？',function(){
+            location.href = '{:url(\'Login/out\')}';
+        })
+    }
+</script>
+</body>
+</html>

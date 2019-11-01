@@ -1,0 +1,96 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="alert">
+                轮播管理
+                <a style="float: right; margin-left: 20px;" class="del-all btn btn-danger btn-sm">批量删除</a>
+                <a style="float: right;" href="{:url('bannerAdd')}" class="btn btn-info btn-sm">添加</a>
+            </div>
+            <!-- 表格 -->
+            <table class="table table-bordered table-hover">
+                <tr class="text-info">
+                    <th><input type="checkbox" class="sel-all"></th>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">名称</th>
+                    <th class="text-center">图片</th>
+                    <th class="text-center">跳转地址</th>
+                    <th >类型</th>
+                    <th class="text-center">排序</th>
+                    <th class="text-center">操作</th>
+                </tr>
+
+                {volist name='list' id='v'}
+                <tr class="tr-{$v.id}">
+                    <td><input type="checkbox" data-id="{$v.id}" class="sel-one"></td>
+                    <td>{$v.id}</td>
+                    <td>{$v.title}</td>
+                    <td>
+                        <a href="{$v.img}" target="_blank">
+                            <img height="60px;" src="{$v.img}">
+                        </a>
+                    </td>
+                    <td>{$v.url}</td>
+                    <td>
+                        {eq name='$v.type' value='1'}
+                        <span class="text-primaey">PC</span>
+                        {else /}
+                        <span class="text-success">手机</span>
+                        {/eq}
+                    </td>
+                    <td>{$v.rank}</td>
+                    <td>
+                        <a href="{:url('bannerEdit', ['id'=>$v['id']])}" title="编辑"><i class="fa fa-edit fa-fw"></i></a> 
+                        |
+                        <a style="cursor: pointer;" onclick="del('{$v.id}')" title="删除"><i class="fa fa-trash-o fa-lg"></i></a>
+                    </td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(".sel-all").on("click", function(){
+        $(".sel-one").prop("checked", $(".sel-all").prop("checked"));
+    })
+
+    $(".del-all").on("click", function(){
+        var arr = [];
+        $(".sel-one").each(function(){
+            if ($(this).prop("checked")) {
+                arr.push($(this).attr("data-id"));
+            }
+        })
+        
+        if (arr.length > 0) {
+            layer.confirm('确认要删除吗？',function(index){
+                $.post("{:url('bannerDel')}", {id: arr}, function(res){
+                    if (res.status == 1) {
+                        layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                            history.go(0);
+                        })
+                    } else {
+                        layer.msg(res.msg, {icon:2,time:1000});
+                    }
+                })
+            })
+        }
+    })
+
+    function del(id) 
+    {
+        layer.confirm('确认要删除吗？',function(index){
+            $.post("{:url('bannerDel')}", {id: [id]}, function(res){
+                if (res.status == 1) {
+                    layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                        history.go(0);
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:2,time:1000});
+                }
+            })
+        })
+    }    
+</script>

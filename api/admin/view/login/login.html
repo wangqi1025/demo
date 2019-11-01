@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>几度CMS - 后台登录</title>
+	<script src="__STATIC__/assets/js/jquery-1.10.2.js"></script>
+	<script src="__STATIC__/plug/layer/layer.js"></script>
+	<link rel="stylesheet" href="__STATIC__/assets/css/login.css">
+</head>
+
+<style>
+	.wrap {
+		background-image: url("__STATIC__/assets/images/u0.png");
+		background-repeat: no-repeat;
+		background-size: 100%;
+	}
+</style>
+
+<body>
+	<div class="wrap" id="wrap">
+		<div class="title">
+			<h1>几度CMS - 后台登录</h1>
+		</div>
+		<div class="center">
+			<div class="box">
+				<div>
+					<input class="name input" type="text" placeholder="用户名">
+				</div>
+				<div>
+					<input class="pass input" type="password" placeholder="密码">
+				</div>
+				<div class="box-img">
+					<input class="verify input" type="text" placeholder="验证码">
+					<img id="img" class="left15" height="40" alt="验证码" src="{:captcha_src()}" title="点击刷新">
+				</div>
+				<div class="box-btn">
+					<input type="button" id="login_btn" value="登 录">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		window.onload = function () {
+			var wrap = document.getElementById('wrap');
+			wrap.style.height = window.innerHeight + 'px';
+		}
+
+		$("body").keydown(function (e) {
+			var curKey = e.which;
+			if (curKey == 13) {
+				$("#login_btn").click();
+			}
+		});
+
+		var captcha_img = $("#img");
+		var verifyimg = captcha_img.attr("src");
+		captcha_img.on('click', function () {
+			captcha();
+		})
+		function captcha() {
+			if (verifyimg.indexOf('?') > 0) {
+				captcha_img.attr("src", verifyimg + '&random=' + Math.random());
+			} else {
+				captcha_img.attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+			}
+		}
+
+		$('#login_btn').on('click', function () {
+			var name = $('.name').val();
+			var pass = $('.pass').val();
+			var verify = $('.verify').val();
+			if (name == '') {
+				layer.alert('用户名不能为空', { title: '提示框', icon: 0 });
+				return false;
+			}
+			if (pass == '') {
+				layer.alert('密码不能为空', { title: '提示框', icon: 0 });
+				return false;
+			}
+			if (verify == '') {
+				layer.alert('验证码不能为空', { title: '提示框', icon: 0 });
+				return false;
+			}
+			$.ajax({
+				url: "{:url('loginDo')}",
+				type: 'post',
+				dataType: 'json',
+				data: {
+					name: name,
+					pass: pass,
+					code: verify
+				},
+				success: function (data) {
+					if (data.status == 1) {
+						layer.msg(data.msg, { time: 1500 }, function () {
+							location.href = "{:url('Index/index')}";
+						});
+					} else {
+						layer.msg(data.msg, { time: 1000 });
+						captcha();
+					}
+				},
+				error: function () {
+					layer.msg('系统繁忙请重试！', { time: 1000 });
+					captcha();
+				}
+			})
+		})
+
+	</script>
+</body>
+
+</html>

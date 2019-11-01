@@ -1,0 +1,53 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="alert">
+                自定义块分类
+                <a style="float: right;" href="{:url('catAdd')}" class="btn btn-info btn-sm">添加</a>
+            </div>
+            <!-- 表格 -->
+            <table class="table table-bordered table-hover">
+                <tr class="text-info">
+                    <th class="text-center">ID</th>
+                    <th class="text-center">分类名称</th>
+                    <th class="text-center">数据量</th>
+                    <th class="text-center">排序</th>
+                    <th class="text-center">操作</th>
+                </tr>
+
+                {volist name='list' id='v'}
+                <tr class="tr-{$v.id}">
+                    <td>{$v.id}</td>
+                    <td>{$v.name}</td>
+                    <td>
+                        <a href="{:url('index', ['cat'=>$v['id']])}" class="btn btn-info btn-sm">管理【{$v.num}】</a>
+                    </td>
+                    <td>{$v.rank}</td>
+                    <td>
+                        <a href="{:url('catEdit', ['id'=>$v['id']])}" title="编辑"><i class="fa fa-edit fa-fw"></i></a> 
+                        |
+                        <a style="cursor: pointer;" onclick="del('{$v.id}')" title="删除"><i class="fa fa-trash-o fa-lg"></i></a>
+                    </td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    function del(id) 
+    {
+        layer.confirm('确认要删除吗？',function(index){
+            $.post("{:url('catDel')}", {id: id}, function(res){
+                if (res.status == 1) {
+                    layer.msg(res.msg, {icon:1, time: 1000}, function () {
+                        history.go(0);
+                    })
+                } else {
+                    layer.msg(res.msg, {icon:2,time:1000});
+                }
+            })
+        })
+    }    
+</script>

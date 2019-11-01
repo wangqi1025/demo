@@ -1,0 +1,59 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                添加菜单
+            </div>
+            <div class="panel-body">
+                <form action="{:url('edit', ['id'=>$res['id']])}" method='post' enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>菜单级别</label>
+                        <select name="pid" class="form-control">
+                            <option value="0">顶级菜单</option>
+                            {volist name='list' id='v'}
+                            <option {eq name="$v.id" value="$res.pid"} selected {/eq} value="{$v.id}"> {$v.leftkong} ├  {$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>菜单名称</label>
+                        <input name="name" value="{$res.name}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>控制器</label>
+                        <input name="c" value="{$res.c}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>方法</label>
+                        <input name="a" value="{$res.a}" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>css样式</label>
+                        <input name="css" value="{$res.css}" type="text" class="form-control">
+                        <p>
+                            如：fa fa-user，参考网址 
+                            <a target="_blank" style="color: #f00;" href="http://fontawesome.dashgame.com/">http://fontawesome.dashgame.com/</a>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label>排序</label>
+                        <input name="rank" value="{$res.rank}" value="50" type="number" min="0" step="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>是否显示</label>
+                        <div class="radio">
+                            <label><input type="radio" name="is_show" value="1" {eq name="$res.is_show" value="1"} checked {/eq}> 是</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="is_show" value="0" {eq name="$res.is_show" value="0"} checked {/eq}> 否</label>
+                        </div>
+                    </div>
+
+                    <button  name="sub" value='1' type="submit" class="btn btn-info" style="margin-right: 40px;"> 保 存 </button>
+                    <a href="{:url('index')}" class="btn btn-warning"> 返 回 </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

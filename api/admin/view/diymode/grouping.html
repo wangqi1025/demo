@@ -1,0 +1,26 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                添加分组线
+            </div>
+            <div class="panel-body">
+                <form <?php if($info){ ?>action="{:url('update_grouping')}"<?php }else{ ?> action="{:url('add_grouping')}"<?php } ?>  method='post' enctype="multipart/form-data">
+                    <input type="hidden" name="mid" value="{$info.mid}">
+                    <input type="hidden" name="id" value="{$info.id}">
+                    <div class="form-group">
+                        <label>分组备注文字</label>
+                        <input name="ramark" value="{$info.remark}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>排序</label>
+                        <input name="rank" value="{$info.rank}" type="number" min="0" step="1" class="form-control" required>
+                    </div>
+                    <button  name="sub" value='1' type="submit" class="btn btn-info" style="margin-right: 40px;"> 保 存 </button>
+                    <a href="{:url('index')}" class="btn btn-warning"> 返 回 </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

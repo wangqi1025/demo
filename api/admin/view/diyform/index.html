@@ -1,0 +1,67 @@
+{layout name='out'}
+<style type="text/css">
+    table input[type=text] {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        text-indent: 4px;
+        outline: none;
+        color: #666;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="alert">
+                表单管理
+                <div style="float: right;">
+                    <a style="margin-right: 10px;" href="{:url('add')}" class="btn btn-info btn-sm">新增</a>
+                    <a style="float: right;" href="{:url('add')}" class="btn btn-info btn-sm">提醒设置</a>
+                </div>
+            </div>
+            <!-- 表格 -->
+            <table class="table table-bordered table-hover">
+                <tr class="text-info">
+                    <th class="text-center">ID</th>
+                    <th class="text-center">名称</th>
+                    <th class="text-center">表名</th>
+                    <th class="text-center">备注</th>
+                    <th class="text-center">未读/总数</th>
+                    <th class="text-center">代码</th>
+                    <th class="text-center">字段管理</th>
+                    <th class="text-center">排序</th>
+                    <th class="text-center">是否验证</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                {volist name="info" id="vo"}
+                    <tr class="tr">
+                        <td>{$vo.id}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.table_name}</td>
+                        <td>
+                            {$vo.remark}
+                        </td>
+                        <td>6666</td>
+                        <td>555</td>
+                        <td>
+                            <span style="cursor: pointer;" class="text-primary" >显示</span>
+                        </td>
+                        <td>{$vo.rank}</td>
+                        <td>{if condition="$vo.is_verify == 1"}
+                                <button type="button" onclick="btn_edit({$vo.id})" class="btn btn-success">是</button>
+                            {else/}
+                                <button type="button" onclick="btn_edit({$vo.id})" class="btn btn-danger">否</button>
+                            {/if}
+                        </td>
+                        <td>
+                            <a href="{:url('edit', ['id'=>$v['id']])}" title="编辑"><i class="fa fa-edit fa-fw"></i></a>
+                            <a style="cursor: pointer;" onclick="del('{$v.id}')" title="删除"><i class="fa fa-trash-o fa-lg"></i></a>
+                        </td>
+                    </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>

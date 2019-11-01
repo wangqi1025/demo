@@ -1,0 +1,157 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                添加自定义块
+            </div>
+            <div class="panel-body">
+                <form action="{:url('add', ['cat'=>$Request.param.cat])}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>名称</label>
+                        <input name="name" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>英文标识</label>
+                        <input name="tag" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>描述说明</label>
+                        <input name="remark" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>分类</label>
+                        <select name="cid" class="form-control">
+                            {volist name='$cat' id='v'}
+                            <option value="{$v.id}">{$v.name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>类型</label>
+                        <select name="type" class="form-control content-type">
+                            <option value="1">文字</option>
+                            <option value="2">图片</option>
+                            <option value="3">富文本</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group content-1">
+                        <label>内容</label>
+                        <textarea name="content1" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group content-2" style="display: none;">
+                        <label class="control-label">内容</label>
+                        <input name="content2" type="text" class="form-control img-text">
+
+                        <!-- 直接上传 -->
+                        <input class="form-control img-single" type="file" name="img" style="margin-top: 10px; width: 10%;"> 
+
+                        <!-- 站内图片 -->
+                        <span class="btn btn-primary img-select" style="margin-top: 10px;">选择站内图片</span>
+                        <div class="show-all-img" style="margin: 20px 0;"></div>
+                    </div>
+                    <div class="form-group content-3" style="display: none;">
+                        <label>内容</label>
+                        <!-- 引入百度编辑器 -->
+                        <script type="text/javascript" charset="utf-8" src="__STATIC__/plug/ue/ueditor.config.js"></script>
+                        <script type="text/javascript" charset="utf-8" src="__STATIC__/plug/ue/ueditor.all.min.js"></script>
+                        <script type="text/javascript" charset="utf-8" src="__STATIC__/plug/ue/lang/zh-cn/zh-cn.js"></script>
+                        <script id="editor" type="text/plain" style="width:100%; height: 200px;"></script>
+                        <script> var ue = UE.getEditor('editor'); </script>
+                    </div>
+
+                    <div class="form-group">
+                        <label>链接</label>
+                        <input name="url" type="text" class="form-control">
+                    </div>
+
+                    <button name="sub" value="1" type="submit" class="btn btn-info" style="margin-right: 40px;"> 保 存 </button>
+                    <a href="{:url('index', ['cat'=>$Request.param.cat])}" class="btn btn-warning"> 返 回 </a>
+                </form>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".content-type").on("change", function () {
+        var type = $(this).val();
+
+        if (type == 1) {
+            $(".content-1").show();
+            $(".content-2").hide();
+            $(".content-3").hide();
+        } else if (type == 2) {
+            $(".content-1").hide();
+            $(".content-2").show();
+            $(".content-3").hide();
+        } else if (type == 3) {
+            $(".content-1").hide();
+            $(".content-2").hide();
+            $(".content-3").show();
+        }
+    })
+
+    $(".img-single").on("change", function () {
+        var formData = new FormData($("form")[0]);
+        $.ajax({
+            url : "{:url('Upload/imgSingle')}",
+            type: "post",
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.status == 1) {
+                    $(".img-text").val(res.data);
+                } else {
+                    layer.msg(res.msg, {time: 1000});
+                }
+            }
+        });
+    })
+
+
+    // 选择本地文件
+    $(".img-select").on("click", function () {
+        $.post("{:url('Upload/fileMag')}", '', function (res) {
+            var txt = '';
+            var list = res.data.infolist;
+            for (var i=0; i<list.length; i++) {
+                txt += "<p><a style='cursor: pointer;' class='img-show' data-href='"+list[i]['url']+"'>"+list[i]['filename']+"</a></p>";
+            }
+            $(".show-all-img").html(txt);
+        })
+    })
+
+    $(document).on("click", ".img-show", function () {
+        var url = $(this).attr("data-href");
+        $.post(url, '', function (res) {
+            var txt;
+            var prev = res.data.purl;   // 上级地址
+            txt = "<p><a style='cursor: pointer;' class='go-prev' data-href='"+prev+"'>返回上一级</a></p>";
+            var list = res.data.infolist;
+            for (var i=0; i<list.length; i++) {
+                txt += "<img class='find-img' src='"+list[i]['url']+"' data-src='"+list[i]['url']+"' alt='"+list[i]['filename']+"' title='"+list[i]['filename']+"' style='width: 100px; height: 100px; margin-right: 10px;'>";
+            }
+            $(".show-all-img").html(txt);
+        })
+    })
+
+    $(document).on("click", ".go-prev", function () {
+        $.post("{:url('Upload/fileMag')}", '', function (res) {
+            var txt = '';
+            var list = res.data.infolist;
+            for (var i=0; i<list.length; i++) {
+                txt += "<p><a style='cursor: pointer;' class='img-show' data-href='"+list[i]['url']+"'>"+list[i]['filename']+"</a></p>";
+            }
+            $(".show-all-img").html(txt);
+        })
+    })
+
+    $(document).on("click", ".find-img", function () {
+        $(".img-text").val($(this).attr("data-src"));
+    })
+</script>

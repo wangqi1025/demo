@@ -1,0 +1,47 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                基础设置
+            </div>
+            <div class="panel-body">
+                <form role="form" method='post' action="{:url('basic')}" enctype="multipart/form-data">
+                    {volist name='list' id='v'}
+                        {switch name='$v.show_type'}
+                        {case 1}
+                        <div class="form-group">
+                            <label>{$v.name}</label>
+                            <input name="{$v.tag}" class="form-control" type="text" value="{$v.val}" required>
+                            <p class="help-block">{$v.exp}</p>
+                        </div>
+                        {/case}
+                        {case 2}
+                        <div class="form-group">
+                            <label class="control-label">{$v.name}：</label>
+                            <div class="">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                    <div class="fileupload-new thumbnail" style="width: 100px;">
+                                        <img src="{$v.val}">
+                                    </div>
+                                    <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 340px; max-height: 100px; line-height: 20px;"></div>
+                                    <div>
+                                        <span class="btn btn-file btn-primary">
+                                            <span class="fileupload-new">选择图片</span>
+                                            <span class="fileupload-exists">修改</span>
+                                            <input type="file" name="{$v.tag}">
+                                        </span>
+                                        <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload">移除</a>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                        {/case}
+                        {/switch}
+                    {/volist}
+                    <button name="sub" value="1" class="btn btn-info f_r"> 修 改 信 息 </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

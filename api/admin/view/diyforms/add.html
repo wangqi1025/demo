@@ -1,0 +1,100 @@
+{layout name='out'}
+<div class="row">
+    <script src="../../../../static/plug/ue/ueditor.config.js"></script>
+    <script src="../../../../static/plug/ue/ueditor.all.js"></script>
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                添加表单
+            </div>
+            <div class="panel-body">
+                <form <?php if($res){ ?> action="{:url('edit')}" <?php }else{ ?>action="{:url('add')}"<?php } ?> method='post' enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>表单名称</label>
+                        <input name="name" value="{$res.name}" type="text" class="form-control" required>
+                    </div>
+                    <input type="hidden" name="id" value="{$res.id}">
+                    <div class="form-group">
+                        <label>数据表名</label>
+                        <input name="table_name" value="{$res.table_name}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>描述说明</label>
+                        <input name="remark" value="{$res.remark}" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>排序</label>
+                        <input name="rank" value="{$res.rank}" value="50" type="number" min="0" step="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>是否开启验证</label>
+                        <div class="radio">
+                            <label><input type="radio" name="is_verify" value="1" {eq name="$res.is_verify" value="1"} checked {/eq}> 是</label>
+                            <label><input type="radio" name="is_verify" value="0" {eq name="$res.is_verify" value="0"} checked {/eq}> 否</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <p><label>是否开启邮箱提醒</label></p>
+                        <button onclick="btn_yes(this)"  name="is_send_email" id="is_send_email" value='' type="button" class="btn btn-success" style="margin-right: 40px;">开启邮箱验证</button>
+                        <input type="hidden" name="is_send_email" value="">
+                    </div>
+                    <div class="box">
+                        <div class="form-group">
+                            <label>邮箱地址（示例：xxx.qq.com）</label>
+                            <input name="email" class="email" value="{$res.email}" value="" type="email" min="0" step="1" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>邮箱标题</label>
+                            <input name="email_title" class="email_title" value="{$res.email_title}" value="" type="text" min="0" step="1" class="form-control" >
+                        </div>
+                        <div class="form-group">
+                            <label>接收邮箱内容</label>
+                            <div id="editor" class="email_content" type="text/plain" name="email_content"  style="width:845px;height:400px;">
+                                {$res.email_content}
+                            </div>
+                        </div>
+                    </div>
+                    <button  name="sub" value='1' type="submit" class="btn btn-info" style="margin-right: 40px;"> 保 存 </button>
+                    <a href="{:url('index')}" class="btn btn-warning"> 返 回 </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            var type = "{$email_type}";
+
+            if (type == 1){
+                $('#is_send_email').text('关闭邮箱验证');
+                $('#is_send_email').attr('class','btn btn-danger');
+                $('.box').show();
+                $('#is_send_email').val(1);
+                $('#is_send_email').next().val(1);
+            }else{
+                $('#is_send_email').text('开启邮箱验证');
+                $('#is_send_email').attr('class','btn btn-success');
+                $('.box').hide();
+                $('#is_send_email').val(0);
+                $('#is_send_email').next().val(0);
+            }
+        })
+        var ue = UE.getEditor('editor');
+        
+        function btn_yes(e) {
+            var type = $(e).val();
+            if (type == 1){
+                $(e).text('开启邮箱验证');
+                $(e).attr('class','btn btn-success');
+                $(e).val(0);
+                $(e).next().val(0);
+                $('.box').hide();
+            }else{
+                $(e).text('关闭邮箱验证');
+                $(e).attr('class','btn btn-danger');
+                $('.box').show();
+                $(e).val(1);
+                $(e).next().val(1);
+            }
+        }
+    </script>
+</div>

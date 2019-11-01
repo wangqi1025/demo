@@ -1,0 +1,32 @@
+{layout name='out'}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <form <?php if($info){ ?> action="{:url('edit',array('id'=>$info['id']))}" <?php }else{ ?>action="{:url('add')}"<?php }?>  method='post' enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>模型名称</label>
+                        <input name="name" value="{$info.name}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>数据表名</label>
+                        <input name="table_name" value="{$info.table_name}" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>描述说明</label>
+                        <input name="remark" value="{$info.remark}" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>排序</label>
+                        <input name="rank" value="{$info.rank}" type="number" class="form-control">
+                    </div>
+                    <button  name="sub" value='1' type="submit" class="btn btn-info" style="margin-right: 40px;"> 保 存 </button>
+                    <a href="{:url('index')}" class="btn btn-warning"> 返 回 </a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</div>
